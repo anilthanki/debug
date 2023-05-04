@@ -97,7 +97,7 @@ def upload_files_to_lib(gi, lib_id, source_dir, galaxy_path, root_folder):
 			log.debug('directory_path %s', directory_path)
 			log.debug('source_dir %s', source_dir)
 			log.debug('galaxy_path %s', galaxy_path)
-			new_dirname = directory_path.replace(source_dir, "")
+			new_dirname = directory_path.replace(source_dir+"/", "")
 			log.debug('new_dirname %s', new_dirname)
 			new_path = os.path.join(galaxy_path, new_dirname)
 			log.debug('new_path %s', new_path)
