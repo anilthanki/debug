@@ -76,15 +76,15 @@ def upload_files_to_lib(gi, lib_id, source_dir, galaxy_path, root_folder):
 			log.debug('root_folder %s', root_folder)
 			log.debug('directory_path %s', directory_path)
 # 			directory_path = os.path.join(galaxy_path, directory_name)
-			try:
+# 			try:
 			    # Create the folder in the library
-			    gi.libraries.get_folders(lib_id, name=directory_name)[0]['id']
+# 			    gi.libraries.get_folders(lib_id, name=directory_name)[0]['id']
 			    folder = gi.libraries.create_folder(lib_id, folder_name=directory_name)
 			    # Set the parent folder ID for the next iteration
 # 			    root_folder = folder[0]['id']
-			except Exception:
+# 			except Exception:
 			    # Folder already exists, get its ID and set the parent folder ID for the next iteration
-			    folder = gi.libraries.get_folders(lib_id, name=directory_name)
+# 			    folder = gi.libraries.get_folders(lib_id, name=directory_name)
 # 			    root_folder = folder[0]['id']
 	
 # 		for file_name in file_names:
