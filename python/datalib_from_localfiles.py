@@ -75,7 +75,7 @@ def upload_files_to_lib(gi, lib_id, source_dir, galaxy_path, root_folder):
 			log.debug('directory_name %s', directory_name)
 			log.debug('root_folder %s', root_folder)
 			log.debug('directory_path %s', directory_path)
-			directory_path = os.path.join(galaxy_path, directory_name)
+# 			directory_path = os.path.join(galaxy_path, directory_name)
 			try:
 			    # Create the folder in the library
 			    gi.libraries.get_folders(lib_id, name=directory_name)[0]['id']
