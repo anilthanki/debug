@@ -87,7 +87,7 @@ def upload_files_to_lib(gi, lib_id, source_dir, galaxy_path, root_folder):
 # 			    root_folder = folder[0]['id']
 	
 		for file_name in file_names:
-			if not filename.startswith('.'):
+			if not file_name.startswith('.'):
 				log.debug('file_name %s', file_name)
 			
 	# 			log.debug('directory_path %s', directory_path)
