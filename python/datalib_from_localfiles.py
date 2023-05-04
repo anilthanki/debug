@@ -67,6 +67,8 @@ def upload_files_to_lib(gi, lib_id, source_dir, galaxy_path, root_folder):
 	log.debug('upload_files_to_lib')
 	# root_folder = gi.libraries.get_libraries(lib_id)[0]['root_folder_id']
 	for directory_path, directory_names, file_names in os.walk(source_dir):
+		log.debug('main loop ..')
+			
 		# Recreate the directory structure
 # 		for directory_name in directory_names:
 # 			log.debug('directory_name %s', directory_name)
@@ -85,6 +87,8 @@ def upload_files_to_lib(gi, lib_id, source_dir, galaxy_path, root_folder):
 # 			    root_folder = folder[0]['id']
 	
 		for file_name in file_names:
+			log.debug('file_name %s', file_name)
+			
 			log.debug('directory_path %s', directory_path)
 			file_path = os.path.join(galaxy_path,file_name)
 			log.debug('file_path %s', file_path)
