@@ -93,8 +93,11 @@ def upload_files_to_lib(gi, lib_id, source_dir, galaxy_path, root_folder):
 			file_path = os.path.join(galaxy_path,file_name)
 			log.debug('file_path %s', file_path)
 			dirname = os.path.basename(directory_path)
-			log.debug('new file_path %s', os.path.join(galaxy_path, dirname, file_name))
+			log.debug('dirname %s', dirname)
+			log.debug('directory_path %s', directory_path)
+			log.debug('source_dir %s', source_dir)
 			new_dirname = directory_path.replace(source_dir, "")
+			log.debug('new_dirname %s', new_dirname)
 			new_file_path = os.path.join(galaxy_path, new_dirname, file_name)
 			log.debug('new file_path %s', new_file_path)
 			# Upload the file to the library
