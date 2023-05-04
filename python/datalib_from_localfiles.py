@@ -87,27 +87,28 @@ def upload_files_to_lib(gi, lib_id, source_dir, galaxy_path, root_folder):
 # 			    root_folder = folder[0]['id']
 	
 		for file_name in file_names:
-			log.debug('file_name %s', file_name)
+			if not filename.startswith('.'):
+				log.debug('file_name %s', file_name)
 			
-# 			log.debug('directory_path %s', directory_path)
-# 			file_path = os.path.join(galaxy_path,file_name)
-# 			log.debug('file_path %s', file_path)
-# 			dirname = os.path.basename(directory_path)
-# 			log.debug('dirname %s', dirname)
-			log.debug('directory_path %s', directory_path)
-			log.debug('source_dir %s', source_dir)
-			log.debug('galaxy_path %s', galaxy_path)
-			if directory_path == source_dir:
-				new_dirname = ""
-			else:
-				new_dirname = directory_path.replace(source_dir+"/", "")
-			log.debug('new_dirname %s', new_dirname)
-			new_path = os.path.join(galaxy_path, new_dirname)
-			log.debug('new_path %s', new_path)
-			new_file_path = os.path.join(new_path, file_name)
-			log.debug('new file_path %s', new_file_path)
-			# Upload the file to the library
-			gi.libraries.upload_from_galaxy_filesystem(lib_id, new_file_path, preserve_dirs= True)
+	# 			log.debug('directory_path %s', directory_path)
+	# 			file_path = os.path.join(galaxy_path,file_name)
+	# 			log.debug('file_path %s', file_path)
+	# 			dirname = os.path.basename(directory_path)
+	# 			log.debug('dirname %s', dirname)
+				log.debug('directory_path %s', directory_path)
+				log.debug('source_dir %s', source_dir)
+				log.debug('galaxy_path %s', galaxy_path)
+				if directory_path == source_dir:
+					new_dirname = ""
+				else:
+					new_dirname = directory_path.replace(source_dir+"/", "")
+				log.debug('new_dirname %s', new_dirname)
+				new_path = os.path.join(galaxy_path, new_dirname)
+				log.debug('new_path %s', new_path)
+				new_file_path = os.path.join(new_path, file_name)
+				log.debug('new file_path %s', new_file_path)
+				# Upload the file to the library
+				gi.libraries.upload_from_galaxy_filesystem(lib_id, new_file_path, preserve_dirs= True)
 
 
 def main():
