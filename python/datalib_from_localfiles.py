@@ -21,14 +21,19 @@ logging.basicConfig()
 
 # parse command line arguments with argparse
 parser = argparse.ArgumentParser()
+
 # Galaxy server
 parser.add_argument("--server", help="Galaxy server")
+
 # Galaxy API key
 parser.add_argument("--api_key", help="Galaxy API key")
+
 # dataset
-parser.add_argument("--datasets_file", help="dataset")
+parser.add_argument("--datasets_file", help="dataset file")
+
 # source dir
-parser.add_argument("--source_dir", help="Source dir")
+parser.add_argument("--source_dir", help="Source directory path")
+
 # Galaxy path
 parser.add_argument("--galaxy_path", help="Galaxy path")
 
@@ -58,7 +63,7 @@ def get_lib_by_name(gi, lib_name):
 	return lib
 
 
-def create_new_libs(gi, lib_name, lib_desc, lib_synopsis):
+def create_new_lib(gi, lib_name, lib_desc, lib_synopsis):
 	new_lib=gi.libraries.create_library(name=lib_name, description=lib_desc, synopsis=lib_synopsis)
 	return new_lib
 
@@ -75,53 +80,39 @@ def upload_files_to_lib(gi, lib_id, source_dir, galaxy_path, root_folder):
 			log.debug('directory_name %s', directory_name)
 			log.debug('root_folder %s', root_folder)
 			log.debug('directory_path %s', directory_path)
-# 			directory_path = os.path.join(galaxy_path, directory_name)
-# 			try:
-			    # Create the folder in the library
-# 			    gi.libraries.get_folders(lib_id, name=directory_name)[0]['id']
+
 			if directory_path == source_dir:
-# 				new_dirname = ""
+				# Create folder in root 
 				folder = gi.libraries.create_folder(lib_id, folder_name=directory_name)
 			else:
 				new_dirname = directory_path.replace(source_dir+"/", "")
-				log.debug('new_dirname %s', new_dirname)
-				folder = gi.libraries.get_folders(lib_id, name="/"+new_dirname)
-				log.debug('folder %s', folder)
 				
+				# Get the parent folder 
+				folder = gi.libraries.get_folders(lib_id, name="/"+new_dirname)
+				
+				# Create folder within the parent folder 
 				folder = gi.libraries.create_folder(lib_id, folder_name=directory_name, base_folder_id=folder[0]['id'])
 			
-			    # Set the parent folder ID for the next iteration
-# 			    root_folder = folder[0]['id']
-# 			except Exception:
-			    # Folder already exists, get its ID and set the parent folder ID for the next iteration
-# 			    folder = gi.libraries.get_folders(lib_id, name=directory_name)
-# 			    root_folder = folder[0]['id']
 	
 		for file_name in file_names:
 			if not file_name.startswith('.'):
 				log.debug('file_name %s', file_name)
-			
-	# 			log.debug('directory_path %s', directory_path)
-	# 			file_path = os.path.join(galaxy_path,file_name)
-	# 			log.debug('file_path %s', file_path)
-	# 			dirname = os.path.basename(directory_path)
-	# 			log.debug('dirname %s', dirname)
 				log.debug('directory_path %s', directory_path)
 				log.debug('source_dir %s', source_dir)
 				log.debug('galaxy_path %s', galaxy_path)
+				
 				if directory_path == source_dir:
 					new_dirname = ""
 				else:
 					new_dirname = directory_path.replace(source_dir+"/", "")
+				
+				# Get the parent folder 
 				folder = gi.libraries.get_folders(lib_id, name="/"+new_dirname)
 				
-				log.debug('new_dirname %s', new_dirname)
-				new_path = os.path.join(galaxy_path, new_dirname)
-				log.debug('new_path %s', new_path)
-				new_file_path = os.path.join(new_path, file_name)
-				log.debug('new file_path %s', new_file_path)
+				file_path = os.path.join(galaxy_path, new_dirname, file_name)
+				
 				# Upload the file to the library
-				gi.libraries.upload_from_galaxy_filesystem(lib_id, new_file_path, preserve_dirs=True, folder_id=folder[0]['id'])
+				gi.libraries.upload_from_galaxy_filesystem(lib_id, file_path, preserve_dirs=True, folder_id=folder[0]['id'])
 
 
 def main():
@@ -144,17 +135,13 @@ def main():
 	datasets = list_datasets(args.datasets_file)
 
 	gi = bioblend.galaxy.GalaxyInstance(url=server, key=api_key)
-
-	libs = get_libs(gi)
-	
-	log.debug('lib %s', libs)
 	
 	for dataset_name in datasets:
 		log.debug('dataset_name %s', dataset_name)
 		lib = get_lib_by_name(gi, dataset_name)
 		lib_id = 0
 		if lib == []:
-			lib = create_new_libs(gi, dataset_name, dataset_name, dataset_name)
+			lib = create_new_lib(gi, dataset_name, dataset_name, dataset_name)
 			lib_id = lib['id']
 		else:
 			lib_id = lib[0]['id']
