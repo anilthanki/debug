@@ -79,7 +79,14 @@ def upload_files_to_lib(gi, lib_id, source_dir, galaxy_path, root_folder):
 # 			try:
 			    # Create the folder in the library
 # 			    gi.libraries.get_folders(lib_id, name=directory_name)[0]['id']
-			folder = gi.libraries.create_folder(lib_id, folder_name=directory_name)
+			if directory_path == source_dir:
+# 				new_dirname = ""
+				folder = gi.libraries.create_folder(lib_id, folder_name=directory_name)
+			else:
+				new_dirname = directory_path.replace(source_dir+"/", "")
+				log.debug('new_dirname %s', new_dirname)
+# 				folder = gi.libraries.create_folder(lib_id, folder_name=directory_name)
+			
 			    # Set the parent folder ID for the next iteration
 # 			    root_folder = folder[0]['id']
 # 			except Exception:
