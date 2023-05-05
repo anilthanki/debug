@@ -98,7 +98,7 @@ def upload_files_to_lib(gi, lib_id, source_dir, galaxy_path, root_folder):
 				log.debug(new_dirname+"/"+directory_name)
 				
 				# Check if folder exist root 
-				folder = gi.libraries.get_folders(lib_id, name=new_dirname+"/"+directory_name)
+				folder = gi.libraries.get_folders(lib_id, name="/"+new_dirname+"/"+directory_name)
 				
 				if folder == []:
 					# Create folder within the parent folder 
