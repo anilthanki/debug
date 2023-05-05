@@ -56,6 +56,31 @@ def list_datasets(datasets_file):
 				datasets[dataset_name.replace(".7z", "")] = last_transfer_date
 	return datasets
 
+# check if dataset was already transferred or if it has been modified since last transfer
+def select_new_mod_datasets(datasets, libs):
+    # open the datasets_file file and iterate per line
+#     log.debug(f"Reading datasets file {datasets_file}...")
+# 	with open(datasets_file, "r") as f:
+        for lib in libs:
+		datetime_obj = datetime.fromisoformat(lib[0]['create_time'])
+		last_transfer_date = datetime_obj.strftime('%Y-%m-%d %H:%M:%S')
+		for dataset in datasets:
+# 	while line := f.readline():
+            # split line into dataset name and date of last transfer
+		    log.debug(f"Reading line: {dataset}...")
+		    dataset_name = dataset 
+		    
+		    # check if dataset was modified since last transfer
+		    if datasets[dataset_name] > last_transfer_date:
+			# if yes, transfer dataset
+			log.info(f"Dataset {dataset_name} was modified on {datasets[dataset_name]} since last transfer on {last_transfer_date}.")
+			continue
+		    # remove dataset from list of datasets
+		    log.info(f"Dataset {dataset_name} has already been downloaded, skipping...")
+		    del datasets[dataset_name]
+
+    return datasets
+
 def get_libs(gi):
 	libs = gi.libraries.get_libraries()
 	return libs
@@ -169,7 +194,11 @@ def main():
 
 	gi = bioblend.galaxy.GalaxyInstance(url=server, key=api_key)
 	
-	for dataset_name in datasets:
+	libs = get_libs(gi)
+	
+	mod_datasets = select_new_mod_datasets(datasets, libs)
+	
+	for dataset_name in mod_datasets:
 		log.debug('dataset_name %s', dataset_name)
 		lib = get_lib_by_name(gi, dataset_name)
 		lib_id = 0
