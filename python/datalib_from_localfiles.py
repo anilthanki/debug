@@ -58,15 +58,10 @@ def list_datasets(datasets_file):
 
 # check if dataset was already transferred or if it has been modified since last transfer
 def select_new_mod_datasets(datasets, libs):
-    # open the datasets_file file and iterate per line
-#     log.debug(f"Reading datasets file {datasets_file}...")
-# 	with open(datasets_file, "r") as f:
         for lib in libs:
 		datetime_obj = datetime.fromisoformat(lib[0]['create_time'])
 		last_transfer_date = datetime_obj.strftime('%Y-%m-%d %H:%M:%S')
 		for dataset in datasets:
-# 	while line := f.readline():
-            # split line into dataset name and date of last transfer
 		    log.debug(f"Reading line: {dataset}...")
 		    dataset_name = dataset 
 		    
@@ -106,10 +101,6 @@ def upload_files_to_lib(gi, lib_id, source_dir, galaxy_path, root_folder):
 			
 		# Recreate the directory structure
 		for directory_name in directory_names:
-			log.debug('directory_name %s', directory_name)
-			log.debug('root_folder %s', root_folder)
-			log.debug('directory_path %s', directory_path)
-
 			if directory_path == source_dir:
 				# Check if folder exist root 
 				folder = gi.libraries.get_folders(lib_id, name="/"+directory_name)
@@ -122,10 +113,6 @@ def upload_files_to_lib(gi, lib_id, source_dir, galaxy_path, root_folder):
 				# Get the parent folder 
 				parent_folder = gi.libraries.get_folders(lib_id, name="/"+new_dirname)
 				
-				log.debug('parent_folder %s', parent_folder)
-				
-				log.debug(new_dirname+"/"+directory_name)
-				
 				# Check if folder exist root 
 				folder = gi.libraries.get_folders(lib_id, name="/"+new_dirname+"/"+directory_name)
 				
@@ -136,10 +123,6 @@ def upload_files_to_lib(gi, lib_id, source_dir, galaxy_path, root_folder):
 	
 		for file_name in file_names:
 			if not file_name.startswith('.'):
-				log.debug('file_name %s', file_name)
-				log.debug('directory_path %s', directory_path)
-				log.debug('source_dir %s', source_dir)
-				log.debug('galaxy_path %s', galaxy_path)
 				
 				if directory_path == source_dir:
 					new_dirname = ""
@@ -149,19 +132,14 @@ def upload_files_to_lib(gi, lib_id, source_dir, galaxy_path, root_folder):
 				# Get the parent folder 
 				folder = gi.libraries.get_folders(lib_id, name="/"+new_dirname)
 				
-				#show_folder = gi.libraries.show_folder(library_id=lib_id, folder_id=folder[0]['id'])
-				
+				# Get the folder content
 				show_folder = folder_client.show_folder(folder[0]['id'], contents=True)
-				
-				log.debug('show_folder %s', show_folder)
 				
 				files = {}
 				
 				for file in show_folder['folder_contents']:
 					if file['type'] == 'file':
 						files[file['name']] = file['id']
-				
-				log.debug('files %s', files)
 				
 				if file_name in files:
 					log.debug('%s present in %s', file_name, files)
