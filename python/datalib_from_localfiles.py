@@ -93,6 +93,10 @@ def upload_files_to_lib(gi, lib_id, source_dir, galaxy_path, root_folder):
 				# Get the parent folder 
 				parent_folder = gi.libraries.get_folders(lib_id, name="/"+new_dirname)
 				
+				log.debug('parent_folder %s', parent_folder)
+				
+				log.debug(new_dirname+"/"+directory_name)
+				
 				# Check if folder exist root 
 				folder = gi.libraries.get_folders(lib_id, name=new_dirname+"/"+directory_name)
 				
@@ -115,6 +119,8 @@ def upload_files_to_lib(gi, lib_id, source_dir, galaxy_path, root_folder):
 				
 				# Get the parent folder 
 				folder = gi.libraries.get_folders(lib_id, name="/"+new_dirname)
+				
+				show_folder = gi.libraries.show_folder(library_id=lib_id, folder_id=folder[0]['id'])
 				
 				file_path = os.path.join(galaxy_path, new_dirname, file_name)
 				
