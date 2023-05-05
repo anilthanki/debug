@@ -3,6 +3,8 @@ import logging
 import json
 import bioblend.galaxy
 import bioblend.galaxy.libraries
+
+from bioblend.galaxy.folders import FoldersClient
 from datetime import date, datetime
 import pytz
 import os
@@ -70,6 +72,8 @@ def create_new_lib(gi, lib_name, lib_desc, lib_synopsis):
 def upload_files_to_lib(gi, lib_id, source_dir, galaxy_path, root_folder):
 	
 	log.debug('upload_files_to_lib')
+	
+	folder_client = FoldersClient(gi)
 	 
 	root_folder = gi.libraries.get_libraries(lib_id)[0]['root_folder_id']
 	for directory_path, directory_names, file_names in os.walk(source_dir):
@@ -120,12 +124,25 @@ def upload_files_to_lib(gi, lib_id, source_dir, galaxy_path, root_folder):
 				# Get the parent folder 
 				folder = gi.libraries.get_folders(lib_id, name="/"+new_dirname)
 				
-				show_folder = gi.libraries.show_folder(library_id=lib_id, folder_id=folder[0]['id'])
+				#show_folder = gi.libraries.show_folder(library_id=lib_id, folder_id=folder[0]['id'])
+				
+				show_folder = folder_client.show_folder(folder[0]['id'], contents=True)
 				
 				log.debug('show_folder %s', show_folder)
 				
-				file_path = os.path.join(galaxy_path, new_dirname, file_name)
+				files = {}
 				
+				for file in folder['folder_contents']:
+					files[file['name']] = file['id']
+				
+				log.debug('files %s', files)
+				
+				if file_name in files:
+					log.debug('%s present in %s', file, files)
+					delete_library_dataset(library_id=lib_id, dataset_id=files[file], purged:True)
+					
+				file_path = os.path.join(galaxy_path, new_dirname, file_name)
+
 				# Upload the file to the library
 				gi.libraries.upload_from_galaxy_filesystem(lib_id, file_path, preserve_dirs=True, folder_id=folder[0]['id'])
 
