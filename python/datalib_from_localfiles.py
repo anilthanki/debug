@@ -139,8 +139,8 @@ def upload_files_to_lib(gi, lib_id, source_dir, galaxy_path, root_folder):
 				log.debug('files %s', files)
 				
 				if file_name in files:
-					log.debug('%s present in %s', file, files)
-					gi.libraries.delete_library_dataset(library_id=lib_id, dataset_id=files[file]['id'], purged=True)
+					log.debug('%s present in %s', file_name, files)
+					gi.libraries.delete_library_dataset(library_id=lib_id, dataset_id=files[file_name], purged=True)
 					
 				file_path = os.path.join(galaxy_path, new_dirname, file_name)
 
