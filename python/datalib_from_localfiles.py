@@ -133,7 +133,7 @@ def upload_files_to_lib(gi, lib_id, source_dir, galaxy_path, root_folder):
 				files = {}
 				
 				for file in show_folder['folder_contents']:
-					if file['type'] == 'folder':
+					if file['type'] == 'file':
 						files[file['name']] = file['id']
 				
 				log.debug('files %s', files)
