@@ -122,6 +122,8 @@ def upload_files_to_lib(gi, lib_id, source_dir, galaxy_path, root_folder):
 				
 				show_folder = gi.libraries.show_folder(library_id=lib_id, folder_id=folder[0]['id'])
 				
+				log.debug('show_folder %s', show_folder)
+				
 				file_path = os.path.join(galaxy_path, new_dirname, file_name)
 				
 				# Upload the file to the library
